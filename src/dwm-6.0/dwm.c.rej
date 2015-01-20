@@ -1,0 +1,29 @@
+--- dwm-6.0/dwm.c	2008-09-09 23:46:17.000000000 +0400
++++ dwm-6.0-icon/dwm.c	2008-10-22 17:00:58.198873878 +0400
+@@ -147,6 +148,7 @@
+ static void detachstack(Client *c);
+ static void die(const char *errstr, ...);
+ static void drawbar(void);
++static void drawicon(const char *file, unsigned long col[ColLast]);
+ static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+ static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
+ static void enternotify(XEvent *e);
+@@ -511,9 +513,15 @@
+ 		drawsquare(sel && sel->tags & 1 << i, occ & 1 << i, urg & 1 << i, col);
+ 		dc.x += dc.w;
+ 	}
+-	if(blw > 0) {
+-		dc.w = blw;
+-		drawtext(lt[sellt]->symbol, dc.norm, False);
++       if(blw > 0) {
++                if (!useicons) {
++                        dc.w = blw;
++                        drawtext(lt[sellt]->symbol, dc.norm, False);
++                }
++                else {
++                        dc.w = dc.h;
++                        drawicon(lt[sellt]->icon, dc.sel);
++                }
+ 		x = dc.x + dc.w;
+ 	}
+ 	else

@@ -1,0 +1,25 @@
+--- dwm-6.0/config.def.h	2008-09-09 23:46:17.000000000 +0400
++++ dwm-6.0-icon/config.def.h	2008-10-22 16:19:48.135602010 +0400
+@@ -13,6 +13,7 @@
+ static Bool showbar                 = True;     /* False means no bar */
+ static Bool topbar                  = True;     /* False means bottom bar */
+ static Bool readin                  = True;     /* False means do not read stdin */
++static Bool useicons                = True;     /* False means use ascii symbols */
+ 
+ /* tagging */
+ static const char tags[][MAXTAGLEN] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+@@ -29,10 +30,10 @@
+ static Bool resizehints = True; /* False means respect size hints in tiled resizals */
+ 
+ static Layout layouts[] = {
+-	/* symbol     arrange function */
+-	{ "[]=",      tile },    /* first entry is default */
+-	{ "><>",      NULL },    /* no layout function means floating behavior */
+-	{ "[M]",      monocle },
++       /* icon     symbol     arrange function */
++       { "tile.xbm",    "[]=",      tile },    /* first entry is default */
++       { "float.xbm",   "><>",      NULL },    /* no layout function means floating behavior */
++       { "monocle.xbm", "[M]",      monocle },
+ };
+ 
+ /* key definitions */

@@ -1,0 +1,1 @@
+/home/komrade/code/dwm/config.h

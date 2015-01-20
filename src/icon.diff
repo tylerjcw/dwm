@@ -1,0 +1,85 @@
+diff -ur dwm-6.0/config.def.h dwm-6.0-icon/config.def.h
+--- dwm-6.0/config.def.h	2008-09-09 23:46:17.000000000 +0400
++++ dwm-6.0-icon/config.def.h	2008-10-22 16:19:48.135602010 +0400
+@@ -13,6 +13,7 @@
+ static Bool showbar                 = True;     /* False means no bar */
+ static Bool topbar                  = True;     /* False means bottom bar */
+ static Bool readin                  = True;     /* False means do not read stdin */
++static Bool useicons                = True;     /* False means use ascii symbols */
+ 
+ /* tagging */
+ static const char tags[][MAXTAGLEN] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+@@ -29,10 +30,10 @@
+ static Bool resizehints = True; /* False means respect size hints in tiled resizals */
+ 
+ static Layout layouts[] = {
+-	/* symbol     arrange function */
+-	{ "[]=",      tile },    /* first entry is default */
+-	{ "><>",      NULL },    /* no layout function means floating behavior */
+-	{ "[M]",      monocle },
++       /* icon     symbol     arrange function */
++       { "tile.xbm",    "[]=",      tile },    /* first entry is default */
++       { "float.xbm",   "><>",      NULL },    /* no layout function means floating behavior */
++       { "monocle.xbm", "[M]",      monocle },
+ };
+ 
+ /* key definitions */
+diff -ur dwm-6.0/dwm.c dwm-6.0-icon/dwm.c
+--- dwm-6.0/dwm.c	2008-09-09 23:46:17.000000000 +0400
++++ dwm-6.0-icon/dwm.c	2008-10-22 17:00:58.198873878 +0400
+@@ -117,6 +117,7 @@
+ } Key;
+ 
+ typedef struct {
++       const char *icon;
+ 	const char *symbol;
+ 	void (*arrange)(void);
+ } Layout;
+@@ -146,6 +147,7 @@
+ static void detachstack(Client *c);
+ static void die(const char *errstr, ...);
+ static void drawbar(void);
++static void drawicon(const char *file, unsigned long col[ColLast]);
+ static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+ static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
+ static void enternotify(XEvent *e);
+@@ -510,9 +512,15 @@
+ 		drawsquare(sel && sel->tags & 1 << i, occ & 1 << i, urg & 1 << i, col);
+ 		dc.x += dc.w;
+ 	}
+-	if(blw > 0) {
+-		dc.w = blw;
+-		drawtext(lt[sellt]->symbol, dc.norm, False);
++       if(blw > 0) {
++                if (!useicons) {
++                        dc.w = blw;
++                        drawtext(lt[sellt]->symbol, dc.norm, False);
++                }
++                else {
++                        dc.w = dc.h;
++                        drawicon(lt[sellt]->icon, dc.sel);
++                }
+ 		x = dc.x + dc.w;
+ 	}
+ 	else
+@@ -538,6 +546,20 @@
+ }
+ 
+ void
++drawicon(const char *file, unsigned long col[ColLast]) {
++    Pixmap icon;
++    int px, py;
++    unsigned int pw, ph;
++    icon = XCreatePixmap(dpy, dc.drawable, dc.h, dc.h, 1);
++    XReadBitmapFile(dpy, dc.drawable, file, &pw, &ph, &icon, &px, &py);
++    XSetForeground(dpy, dc.gc, col[ColBG]);
++    XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, 0, dc.h, dc.h);
++    XSetForeground(dpy, dc.gc, col[ColFG]);
++    XSetBackground(dpy, dc.gc, col[ColBG]);
++    XCopyPlane(dpy, icon, dc.drawable, dc.gc, px, py, pw, ph, dc.x, dc.h/2-ph/2+py, 1);
++}
++
++void
+ drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]) {
+ 	int x;
+ 	XGCValues gcv;
