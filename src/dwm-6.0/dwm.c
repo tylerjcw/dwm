@@ -799,7 +799,8 @@ drawbar(Monitor *m) {
 	dc.x += dc.w;
 	x = dc.x;
 	if(m == selmon) { /* status is only drawn on selected monitor */
-		dc.w = TEXTW(stext);
+		//dc.w = TEXTW(stext);
+		dc.w = 80; /* Limit title width to 85 characters for small monitors */
 		dc.x = m->ww - dc.w;
 		if(dc.x < x) {
 			dc.x = x;
@@ -888,7 +889,7 @@ drawsquare(Bool filled, Bool empty, unsigned long col[ColLast]) {
 
 void
 drawtext(const char *text, unsigned long col[ColLast], Bool pad) {
-	char buf[256];
+	char buf[85];
 	int i, x, y, h, len, olen;
 
 	XSetForeground(dpy, dc.gc, col[ ColBG ]);
@@ -910,7 +911,7 @@ drawtext(const char *text, unsigned long col[ColLast], Bool pad) {
 	if(dc.font.set)
 		XmbDrawString(dpy, dc.drawable, dc.font.set, dc.gc, x, y, buf, len);
 	else
-		XDrawString(dpy, dc.drawable, dc.gc, x, y, buf, len);
+		XDrawString(dpy, dc.drawable, dc.gc, x, y, buf, 85);
 }
 
 void

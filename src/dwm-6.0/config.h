@@ -6,7 +6,7 @@
 #include <X11/XF86keysym.h> 
 
 /* appearance */
-static const char font[] = "-*-bitocra13-*-*-*-*-*-*-*-*-*-*-*-*";
+static const char font[] = "-*-bitocra-*-*-*-*-*-*-*-*-*-*-*-*";
 
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][8] = {
@@ -37,24 +37,24 @@ static const int nmaster      = 1;        // default number of clients in the ma
 
 static const Layout layouts[] = {
     // icon                                    symbol    arrange function
-    { "~/.dotfiles/dwm/icons/tile.xbm",     "þ",      tile },
-    { "~/.dotfiles/dwm/icons/bstack.xbm",   "ü",      bstack },
-    { "~/.dotfiles/dwm/icons/float.xbm",    "ý",      NULL },     // no layout function means floating behavior
-    { "~/.dotfiles/dwm/icons/monocle.xbm",  "ÿ",      monocle },
+    { "/home/komrade/etc/dwm/icons/tile.xbm",     "þ",      tile },
+    { "/home/komrade/etc/dwm/icons/bstack.xbm",   "ü",      bstack },
+    { "/home/komrade/etc/dwm/icons/float.xbm",    "ý",      NULL },     // no layout function means floating behavior
+    { "/home/komrade/etc/dwm/icons/monocle.xbm",  "ÿ",      monocle },
 };
 
 static const MonocleNumberedIcon monoclenumberedicons[] = {
-	{ "~/.dotfiles/dwm/icons/monocle.xbm" },
+	{ "/home/komrade/etc/dwm/icons/monocle.xbm" },
 };
 
 /* tagging */
 static const Tag tags[] = {
     // name       layout           mfact    nmaster
-    { " term ",        &layouts[0],   0.65,      -1 },
-    { " webs ",        &layouts[0],     -1,      -1 },
-    { " file ",        &layouts[0],   0.65,      -1 },
-    { " code ",        &layouts[0],   0.65,      -1 },
-    { " gimp ",        &layouts[0],     -1,      -1 },
+    { " 1 ",        &layouts[0],   0.65,      -1 },
+    { " 2 ",        &layouts[0],     -1,      -1 },
+    { " 3 ",        &layouts[0],   0.65,      -1 },
+    { " 4 ",        &layouts[0],   0.65,      -1 },
+    { " 5 ",        &layouts[0],     -1,      -1 },
 };
 
 /* window rules */
@@ -68,7 +68,7 @@ static const Rule rules[] = {
     { "URxvt",       NULL,  "ncmpcpp",       0,             True,          True,       -1 },
     { "Nitrogen",    NULL,       NULL,       0,             True,          True,       1  },
     { "URxvt",       NULL,      "vim",       1 << 3,       False,         False,       -1 },
-    { "tabbed",    "surf",       NULL,       1 << 1,       False,         False,       -1 },
+    { "Google-chrome-stable",    NULL,       NULL,       1 << 1,       False,         False,       -1 },
     { "tabbed",    "term",       NULL,       1,            False,         False,       -1 },
 };
 
@@ -86,21 +86,15 @@ static const Rule rules[] = {
 /* commands */
 static const char *dmenucmd[]      = { "dmenu_run", "-i", "-fn", font, "-nb", colors[0][ColBG], "-nf", colors[0][ColFG],"-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
 static const char *termcmd[]       = { "tabbed", "-n", "term", "urxvt", "-embed", NULL };
-static const char *scratchpadcmd[] = { "urxvt", "-title", scratchpadname, "-geometry", "150x40", NULL };
-static const char *ncmpcpppadcmd[] = { "urxvt", "-title", ncmpcpppadname, "-geometry", "150x40", "-e", "ncmpcpp", NULL };
+static const char *scratchpadcmd[] = { "urxvt", "-title", scratchpadname, "-geometry", "99x45", NULL };
+static const char *ncmpcpppadcmd[] = { "urxvt", "-title", ncmpcpppadname, "-geometry", "100x40", "-e", "ncmpcpp", NULL };
 static const char *pcmanfmcmd[]    = { "pcmanfm", NULL };
-static const char *browsercmd[]    = { "tabbed", "-n", "surf", "-c", "surf", "-e", NULL };
+static const char *browsercmd[]    = { "google-chrome-stable", NULL };
 static const char *incogcmd[]      = { "google-chrome-stable", "--incognito", NULL };
 static const char *editcmd[]       = { "urxvt", "-e", "vim", NULL };
 static const char *sublcmd[]       = { "subl", NULL };
-static const char *incvolume[]     = { "/home/komrade/bin/dvol", "-i", "1", NULL };
-static const char *decvolume[]     = { "/home/komrade/bin/dvol", "-d", "1", NULL };
-static const char *mutevolume[]    = { "/home/komrade/bin/dvol", "--toggle", NULL };
-static const char *togglecmd[]     = { "mpc", "toggle", NULL };
-static const char *nextcmd[]       = { "mpc", "next", NULL };
-static const char *prevcmd[]       = { "mpc", "prev", NULL };
-static const char *stopcmd[]       = { "mpc", "stop", NULL };
-static const char *quitcmd[]       = { "pkill", "X", NULL };
+static const char *scrotcmd[]      = { "scrot", NULL};
+static const char *quitcmd[]       = { "pkill", "xinit", NULL };
 
 static Key keys[] = {
    // modifier                      key        function        argument
@@ -109,7 +103,7 @@ static Key keys[] = {
     { MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },     //#Mod+p:Launches dmenu for user input
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },      //#Mod+Shift+Return:Spawns urxvt embedded in tabbed
     { MODKEY,                       XK_f,      spawn,          {.v = pcmanfmcmd } },   //#Mod+f:Spawns pcmanfm
-    { MODKEY,                       XK_w,      spawn,          {.v = browsercmd } },   //#Mod+w:Spawns surf embedded in tabbed
+    { MODKEY,                       XK_w,      spawn,          {.v = browsercmd } },   //#Mod+w:Spawns google-chrome-stable
     { MODKEY|ShiftMask,             XK_w,      spawn,          {.v = incogcmd } },     //#Mod+Shift+w:Spawns an incognito window of google-chrome-stable
     { MODKEY,                       XK_e,      spawn,          {.v = editcmd } },      //#Mod+e:Spawns vim
     { MODKEY|ShiftMask,             XK_e,      spawn,          {.v = sublcmd } },      //#Mod+Shift+e:Spawns sublime-text
@@ -122,7 +116,6 @@ static Key keys[] = {
     { Mod1Mask,                     XK_z,      togglescratch,  {.v = scratchpadcmd} }, //#Alt_L+z:Spawns/Summons urxvt scratchpad
     { Mod1Mask,                     XK_m,      togglescratch,  {.v = ncmpcpppadcmd} }, //#Alt_L+z:Spawns/Summons ncmpcpp in a urxvt scratchpad
     { MODKEY,                       XK_b,      togglebar,      {0} },                  //#Mod+b:Toggle dwm info bar
-    { MODKEY,                       XK_b,      togglebar,      {0} },                  //#Mod+b:Toggle dzen info bar
     { MODKEY,                       XK_space,  setlayout,      {0} },                  //#Mod+Space:Cycle Layouts
     { MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },                  //#Mod+Shift+Space:Toggle floating on focused window
     { MODKEY,                       XK_0,      view,           {.ui = ~0 } },          //#Mod+0:Toggle all tags visible
@@ -131,6 +124,7 @@ static Key keys[] = {
     { MODKEY,                       XK_period, focusmon,       {.i = +1 } },           //#Mod+.:Focus next monitor
     { MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },           //#Mod+Shift+,:Move focused window to last monitor
     { MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },           //#Mod+Shift+.:Move focused window to next monitor
+    { MODKEY,                       XK_print,  spawn,          {.v = scrotcmd } },     //#Mod+PrtSc:Take a screenshot and move it to ~/images/scrots
     TAGKEYS(                        XK_1,                      0)                      //#Mod+[1..5]:Toggle chosen tag view visible
     TAGKEYS(                        XK_2,                      1)                      //#Mod+Control+[1..5]:View only chosen tag
     TAGKEYS(                        XK_3,                      2)                      //#Mod+Shift+[1..5]:Switch focused window to chosen tag
@@ -138,13 +132,7 @@ static Key keys[] = {
     TAGKEYS(                        XK_5,                      4)                      //#Mod+Mouse2:Toggle focused window to and from floating mode
     { MODKEY,                       XK_q,      quit,           {0} },                  //#Mod+q:Restart dwm (.xinitrc loop)
     { MODKEY|ShiftMask,             XK_q,      spawn,          {.v = quitcmd } },      //#Mod+Shift+q:Kill X11
-    { 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = decvolume } },
-    { 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = incvolume } },
-    { 0,                XF86XK_AudioMute,      spawn,          {.v = mutevolume } },
-    { 0,                XF86XK_AudioPlay,      spawn,          {.v = togglecmd } },
-    { 0,                XF86XK_AudioNext,      spawn,          {.v = nextcmd } },
-    { 0,                XF86XK_AudioPrev,      spawn,          {.v = prevcmd } },
-    { 0,                XF86XK_AudioStop,      spawn,          {.v = stopcmd } },
+    { 0,                  XF86XK_Launch1,      spawn,          {.v = scratchpadcmd }}, //#ThinkVantage:Spawns/Summons urxvt scratchpad
 };
 
 // click can be ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin
