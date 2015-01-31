@@ -815,7 +815,8 @@ drawbar(Monitor *m) {
 		if(m->sel) {
 			col = m == selmon ? dc.colors[1] : dc.colors[0];
 			drawtext(m->sel->name, col, True);
-			drawsquare(m->sel->isfixed, m->sel->isfloating, col);
+			//drawsquare(m->sel->isfixed, m->sel->isfloating, col);
+			XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.h - 2, dc.w, 2);
 		}
 		else
 			drawtext(NULL, dc.colors[0], False);
@@ -882,9 +883,12 @@ drawsquare(Bool filled, Bool empty, unsigned long col[ColLast]) {
 	XSetForeground(dpy, dc.gc, col[ ColFG ]);
 	x = (dc.font.ascent + dc.font.descent + 2) / 4;
 	if(filled)
-		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1, x+1, x+1);
+	{
+		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, 2);
+		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x + 1, x, 2, 2);
+	}
 	else if(empty)
-		XDrawRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1, x, x);
+		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, 2);
 }
 
 void
